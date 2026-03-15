@@ -31,7 +31,7 @@ Built as a portfolio project to demonstrate end-to-end data engineering and anal
 ---
 
 ## Project Structure
-```text
+
 market-trend-analyzer/
 ├── data/                         # SQLite DB + saved charts
 ├── collectors/
@@ -48,23 +48,6 @@ market-trend-analyzer/
 │   └── plots.py                  # Matplotlib charts
 ├── main.py                       # Full pipeline runner
 └── requirements.txt
-```
-
----
-
-## Setup & Run
-```bash
-# 1. Clone the repo
-git clone https://github.com/YOUR_USERNAME/market-trend-analyzer.git
-cd market-trend-analyzer
-
-# 2. Install dependencies
-pip install -r requirements.txt
-
-# 3. Run the full pipeline
-python main.py
-```
-
 ---
 
 ## Sample Output
@@ -97,5 +80,5 @@ python main.py
 
 ## Author
 
-**Your Name**  
-[LinkedIn](https://linkedin.com/in/yourprofile) • [GitHub](https://github.com/yourusername)
+**[Vibhor Hedau]**  
+[LinkedIn]((https://www.linkedin.com/in/vibhor-hedau-1b7911160/)) • [GitHub]((https://github.com/vibhorhedau))
