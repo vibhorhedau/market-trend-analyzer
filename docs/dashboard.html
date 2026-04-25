@@ -15,6 +15,7 @@
   --green:#2dba8a;--green-dim:#0a2a1e;
   --amber:#f0a830;--amber-dim:#2a1e08;
   --red:#e85555;--red-dim:#2a0e0e;
+  --purple:#9b7fff;--purple-dim:#281b3d;
 }
 body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;line-height:1.6;}
 body::before{
@@ -61,7 +62,7 @@ nav{
 .kpi-badge{font-size:10px;font-weight:600;padding:2px 7px;border-radius:10px;font-family:'IBM Plex Mono',monospace;}
 .kpi-badge.up{background:var(--green-dim);color:var(--green);}
 .kpi-badge.dn{background:var(--red-dim);color:var(--red);}
-.kpi-val{font-size:1.5rem;font-weight:800;letter-spacing:-0.8px;font-family:'IBM Plex Mono',monospace;}
+.kpi-val{font-size:1.3rem;font-weight:800;letter-spacing:-0.8px;font-family:'IBM Plex Mono',monospace;}
 .kpi-val.blue{color:var(--blue);}
 .kpi-val.green{color:var(--green);}
 .kpi-val.amber{color:var(--amber);}
@@ -71,7 +72,8 @@ nav{
 /* MAIN CHART */
 .main-chart-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.5rem;margin-bottom:1.5rem;}
 .card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;flex-wrap:wrap;gap:10px;}
-.card-title{font-size:14px;font-weight:600;letter-spacing:-0.2px;}
+.card-title{font-size:14px;font-weight:600;letter-spacing:-0.2px;display:flex;align-items:center;gap:8px;}
+.card-title .badge{font-size:10px;padding:2px 6px;border-radius:4px;background:var(--purple-dim);color:var(--purple);font-weight:700;}
 .tabs{display:flex;gap:6px;flex-wrap:wrap;}
 .tab{
   padding:5px 14px;border-radius:6px;font-size:12px;font-weight:600;
@@ -82,13 +84,14 @@ nav{
 }
 .tab:hover{border-color:var(--border2);color:var(--text);}
 .tab.active{background:var(--blue);color:#fff;border-color:var(--blue);}
-.chart-wrap{position:relative;height:280px;}
+.chart-wrap{position:relative;height:300px;}
 
 /* LEGEND */
 .legend{display:flex;gap:16px;margin-bottom:1rem;flex-wrap:wrap;}
 .leg-item{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);}
 .leg-line{width:20px;height:2px;border-radius:1px;}
 .leg-line.dashed{background:repeating-linear-gradient(90deg,currentColor 0,currentColor 5px,transparent 5px,transparent 9px);}
+.leg-area{width:20px;height:12px;border-radius:2px;background:rgba(240,168,48,0.15);border-top:2px dashed var(--amber);}
 
 /* GRID 2 */
 .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(400px,1fr));gap:1.5rem;margin-bottom:1.5rem;}
@@ -97,8 +100,8 @@ nav{
 .chart-sm{position:relative;height:210px;}
 
 /* SIGNAL TABLE */
-.signal-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.5rem;margin-bottom:1.5rem;}
-table{width:100%;border-collapse:collapse;font-size:13px;}
+.signal-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.5rem;margin-bottom:1.5rem;overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:13px;min-width:600px;}
 thead th{
   text-align:left;color:var(--muted);font-weight:600;font-size:11px;
   letter-spacing:0.8px;text-transform:uppercase;
@@ -109,12 +112,14 @@ tbody tr:hover{background:rgba(255,255,255,0.02);}
 tbody td{padding:12px;border-bottom:1px solid var(--border);color:var(--text);}
 tbody tr:last-child td{border-bottom:none;}
 .mono{font-family:'IBM Plex Mono',monospace;font-size:13px;}
-.pill{display:inline-block;padding:3px 11px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:0.5px;}
+.pill{display:inline-block;padding:3px 11px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:0.5px;text-align:center;min-width:70px;}
 .pill.bull{background:var(--green-dim);color:var(--green);border:1px solid rgba(45,186,138,0.2);}
 .pill.bear{background:var(--red-dim);color:var(--red);border:1px solid rgba(232,85,85,0.2);}
+.pill.neu{background:var(--border);color:var(--text);border:1px solid var(--border2);}
+.pill.hot{background:var(--purple-dim);color:var(--purple);border:1px solid rgba(155,127,255,0.2);}
 
 /* RE TABLE */
-.re-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.5rem;}
+.re-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.5rem;overflow-x:auto;}
 
 footer{
   position:relative;z-index:1;
@@ -143,7 +148,7 @@ footer a:hover{color:var(--blue);}
   <div class="dash-header">
     <div class="dash-title">
       <h1>Market Dashboard</h1>
-      <p>Stocks + real estate trend analysis</p>
+      <p>Stocks + real estate trend analysis (US &amp; India)</p>
     </div>
     <div class="status-badge"><span class="dot"></span>Data loaded</div>
   </div>
@@ -152,13 +157,14 @@ footer a:hover{color:var(--blue);}
 
   <div class="main-chart-card">
     <div class="card-header">
-      <span class="card-title" id="chart-title">Stock price — 6 month trend</span>
+      <span class="card-title" id="chart-title">Trend &amp; Forecast <span class="badge">NEW</span></span>
       <div class="tabs" id="stock-tabs"></div>
     </div>
     <div class="legend">
       <div class="leg-item"><div class="leg-line" style="background:#4a9eff;"></div>Close</div>
       <div class="leg-item"><div class="leg-line dashed" style="color:#2dba8a;"></div>MA7</div>
       <div class="leg-item"><div class="leg-line dashed" style="color:#f0a830;"></div>MA30</div>
+      <div class="leg-item"><div class="leg-area"></div>+7d Linear Forecast</div>
     </div>
     <div class="chart-wrap"><canvas id="stockChart"></canvas></div>
   </div>
@@ -175,9 +181,9 @@ footer a:hover{color:var(--blue);}
   </div>
 
   <div class="signal-card">
-    <div class="card-header"><span class="card-title">Trend signals — latest close</span></div>
+    <div class="card-header"><span class="card-title">Trend signals &amp; Indicators</span></div>
     <table>
-      <thead><tr><th>Symbol</th><th>Latest close</th><th>MA 7-day</th><th>MA 30-day</th><th>Volatility</th><th>Signal</th></tr></thead>
+      <thead><tr><th>Symbol</th><th>Latest close</th><th>MA 7-day</th><th>MA 30-day</th><th>RSI (14)</th><th>Volatility</th><th>Forecast +7d</th><th>Signal</th></tr></thead>
       <tbody id="signal-body"></tbody>
     </table>
   </div>
@@ -202,25 +208,9 @@ footer a:hover{color:var(--blue);}
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script>
-const C={blue:'#4a9eff',green:'#2dba8a',amber:'#f0a830',red:'#e85555',purple:'#9b7fff'};
+const C={blue:'#4a9eff',green:'#2dba8a',amber:'#f0a830',red:'#e85555',purple:'#9b7fff',muted:'#5a6580'};
 const PALETTE=[C.blue,C.green,C.amber,C.red];
 let stockInst=null;
-
-function rollingMean(arr,w){
-  return arr.map((_,i)=>{
-    if(i<w-1)return null;
-    const s=arr.slice(i-w+1,i+1);
-    return Math.round(s.reduce((a,b)=>a+b,0)/w*100)/100;
-  });
-}
-function rollingStd(arr,w){
-  return arr.map((_,i)=>{
-    if(i<w-1)return null;
-    const s=arr.slice(i-w+1,i+1);
-    const m=s.reduce((a,b)=>a+b,0)/w;
-    return Math.round(Math.sqrt(s.reduce((a,b)=>a+(b-m)**2,0)/w)*100)/100;
-  });
-}
 
 const gridColor='#1e2535';
 const tickColor='#3a4560';
@@ -244,15 +234,17 @@ fetch('data.json').then(r=>r.json()).then(data=>{
 
   // KPI grid
   const kpiEl=document.getElementById('kpi-grid');
-  syms.forEach((sym,i)=>{
+  // Just show first 6 symbols so it fits nicely
+  syms.slice(0,6).forEach((sym,i)=>{
     const p=stocks[sym].prices;
     const last=p[p.length-1];const prev=p[p.length-2];
     const chg=((last-prev)/prev*100).toFixed(2);
     const up=parseFloat(chg)>=0;
-    const colors=['blue','green','amber','red'];
+    const colors=['blue','green','amber','red','purple','blue'];
+    const cur=sym.includes('.NS')?'₹':'$';
     kpiEl.innerHTML+=`<div class="kpi">
-      <div class="kpi-top"><span class="kpi-sym">${sym}</span><span class="kpi-badge ${up?'up':'dn'}">${up?'+':''}${chg}%</span></div>
-      <div class="kpi-val ${colors[i]}">$${last}</div>
+      <div class="kpi-top"><span class="kpi-sym">${sym.replace('.NS','')}</span><span class="kpi-badge ${up?'up':'dn'}">${up?'+':''}${chg}%</span></div>
+      <div class="kpi-val ${colors[i]}">${cur}${last}</div>
       <div class="kpi-lbl">Latest close</div>
     </div>`;
   });
@@ -261,7 +253,7 @@ fetch('data.json').then(r=>r.json()).then(data=>{
   kpiEl.innerHTML+=`<div class="kpi">
     <div class="kpi-top"><span class="kpi-sym">RE</span><span class="kpi-badge up">yield</span></div>
     <div class="kpi-val amber">${maxY}%</div>
-    <div class="kpi-lbl">Best yield — ${topCity}</div>
+    <div class="kpi-lbl">Best — ${topCity}</div>
   </div>`;
 
   // Stock tabs + chart
@@ -269,7 +261,7 @@ fetch('data.json').then(r=>r.json()).then(data=>{
   syms.forEach((sym,i)=>{
     const btn=document.createElement('button');
     btn.className='tab'+(i===0?' active':'');
-    btn.textContent=sym;
+    btn.textContent=sym.replace('.NS','');
     btn.onclick=()=>{
       document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
       btn.classList.add('active');
@@ -280,23 +272,44 @@ fetch('data.json').then(r=>r.json()).then(data=>{
 
   function drawStock(sym){
     const s=stocks[sym];
-    const ma7=rollingMean(s.prices,7);
-    const ma30=rollingMean(s.prices,30);
+    const cur=sym.includes('.NS')?'₹':'$';
+    
+    // Add 7 forecast days to the labels
+    const d=new Date(s.dates[s.dates.length-1]);
+    const fDates=[];
+    for(let i=1;i<=7;i++){
+      d.setDate(d.getDate()+1);
+      if(d.getDay()===0||d.getDay()===6) d.setDate(d.getDate()+(d.getDay()===0?1:2)); // rough business days
+      fDates.push(d.toISOString().split('T')[0]);
+    }
+    const allDates=[...s.dates, ...fDates];
+    
+    const fData=Array(s.prices.length-1).fill(null);
+    fData.push(s.prices[s.prices.length-1]); // connect from last point
+    fData.push(...s.forecast);
+
     if(stockInst)stockInst.destroy();
     stockInst=new Chart(document.getElementById('stockChart'),{
       type:'line',
       data:{
-        labels:s.dates,
+        labels:allDates,
         datasets:[
-          {label:'Close',data:s.prices,borderColor:C.blue,borderWidth:2,pointRadius:0,fill:false,tension:0.3},
-          {label:'MA7',data:ma7,borderColor:C.green,borderWidth:1.5,pointRadius:0,fill:false,tension:0.3,borderDash:[5,4]},
-          {label:'MA30',data:ma30,borderColor:C.amber,borderWidth:1.5,pointRadius:0,fill:false,tension:0.3,borderDash:[5,4]}
+          {label:'Close',data:[...s.prices,...Array(7).fill(null)],borderColor:C.blue,borderWidth:2,pointRadius:0,fill:false,tension:0.3},
+          {label:'MA7',data:[...s.ma7,...Array(7).fill(null)],borderColor:C.green,borderWidth:1.5,pointRadius:0,fill:false,tension:0.3,borderDash:[5,4]},
+          {label:'MA30',data:[...s.ma30,...Array(7).fill(null)],borderColor:C.amber,borderWidth:1.5,pointRadius:0,fill:false,tension:0.3,borderDash:[5,4]},
+          {label:'Forecast',data:fData,borderColor:C.amber,borderWidth:2,pointRadius:0,fill:true,backgroundColor:'rgba(240,168,48,0.15)',tension:0,borderDash:[4,4]}
         ]
       },
-      options:{...baseOpts,scales:{
-        x:{ticks:{color:tickColor,maxTicksLimit:9,font:{size:11,family:'IBM Plex Mono'}},grid:{color:gridColor}},
-        y:{ticks:{color:tickColor,font:{size:11,family:'IBM Plex Mono'},callback:v=>'$'+v},grid:{color:gridColor}}
-      }}
+      options:{...baseOpts,
+        plugins:{
+          tooltip:{callbacks:{label:c=>c.dataset.label+': '+cur+c.raw}},
+          legend:{display:false}
+        },
+        scales:{
+          x:{ticks:{color:tickColor,maxTicksLimit:9,font:{size:11,family:'IBM Plex Mono'}},grid:{color:gridColor}},
+          y:{ticks:{color:tickColor,font:{size:11,family:'IBM Plex Mono'},callback:v=>cur+v},grid:{color:gridColor}}
+        }
+      }
     });
   }
   drawStock(syms[0]);
@@ -329,18 +342,31 @@ fetch('data.json').then(r=>r.json()).then(data=>{
   // Signal table
   const sbody=document.getElementById('signal-body');
   syms.forEach(sym=>{
-    const p=stocks[sym].prices;
-    const n=p.length-1;
-    const ma7=rollingMean(p,7);
-    const ma30=rollingMean(p,30);
-    const vol=rollingStd(p,7);
-    const bull=ma7[n]!==null&&ma30[n]!==null&&ma7[n]>ma30[n];
+    const s=stocks[sym];
+    const n=s.prices.length-1;
+    const cur=sym.includes('.NS')?'₹':'$';
+    
+    const ma7=s.ma7[n];
+    const ma30=s.ma30[n];
+    const bull=ma7!==null&&ma30!==null&&ma7>ma30;
+    
+    let rsiHTML = '<span class="mono" style="color:'+C.muted+'">'+(s.last_rsi??'—')+'</span>';
+    if(s.rsi_zone==='Overbought') rsiHTML+=' <span class="pill hot">HOT</span>';
+    else if(s.rsi_zone==='Oversold') rsiHTML+=' <span class="pill bull">LOW</span>';
+    
+    const slope=s.slope;
+    const sColor=slope>0?C.green:C.red;
+    const sDir=slope>0?'↑':'↓';
+    const fcst = s.forecast[6];
+
     sbody.innerHTML+=`<tr>
       <td style="font-weight:700">${sym}</td>
-      <td class="mono">$${p[n]}</td>
-      <td class="mono" style="color:${C.green}">$${ma7[n]??'—'}</td>
-      <td class="mono" style="color:${C.amber}">$${ma30[n]??'—'}</td>
-      <td class="mono" style="color:${C.muted}">${vol[n]??'—'}</td>
+      <td class="mono">${cur}${s.prices[n]}</td>
+      <td class="mono" style="color:${C.green}">${cur}${ma7??'—'}</td>
+      <td class="mono" style="color:${C.amber}">${cur}${ma30??'—'}</td>
+      <td>${rsiHTML}</td>
+      <td class="mono" style="color:${C.muted}">${s.vol[n]??'—'}</td>
+      <td class="mono" style="color:${sColor}">${cur}${fcst} ${sDir}</td>
       <td><span class="pill ${bull?'bull':'bear'}">${bull?'Bullish':'Bearish'}</span></td>
     </tr>`;
   });

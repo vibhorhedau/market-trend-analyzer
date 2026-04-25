@@ -24,6 +24,8 @@
   --amber-dim:#2a1e08;
   --red:#e85555;
   --red-dim:#2a0e0e;
+  --purple:#9b7fff;
+  --purple-dim:#281b3d;
 }
 html{scroll-behavior:smooth;}
 body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;line-height:1.6;overflow-x:hidden;}
@@ -252,7 +254,7 @@ footer a:hover{color:var(--blue);}
 </nav>
 
 <div class="hero fade-in">
-  <div class="hero-badge"><span class="pulse"></span>Portfolio Project</div>
+  <div class="hero-badge"><span class="pulse"></span>Version 2.0 Live</div>
   <h1>Stock &amp; Real Estate<br/><span class="line2">Trend Analyzer</span></h1>
   <p class="hero-sub">An end-to-end data pipeline that collects, stores, and detects market trends using Python, SQL, and live financial APIs.</p>
   <div class="hero-actions">
@@ -267,11 +269,11 @@ footer a:hover{color:var(--blue);}
 
 <div class="stats-section fade-in">
   <div class="stats-grid">
-    <div class="stat-box"><div class="stat-num blue">4</div><div class="stat-lbl">Stocks tracked</div></div>
+    <div class="stat-box"><div class="stat-num blue">7</div><div class="stat-lbl">Stocks tracked (US+IN)</div></div>
     <div class="stat-box"><div class="stat-num green">6mo</div><div class="stat-lbl">Historical data</div></div>
     <div class="stat-box"><div class="stat-num amber">4</div><div class="stat-lbl">Cities analyzed</div></div>
-    <div class="stat-box"><div class="stat-num red">120+</div><div class="stat-lbl">Data points per stock</div></div>
-    <div class="stat-box"><div class="stat-num blue">5</div><div class="stat-lbl">SQL queries</div></div>
+    <div class="stat-box"><div class="stat-num purple">7d</div><div class="stat-lbl">Price forecasts</div></div>
+    <div class="stat-box"><div class="stat-num blue">7</div><div class="stat-lbl">Pipeline steps</div></div>
   </div>
 </div>
 
@@ -282,12 +284,17 @@ footer a:hover{color:var(--blue);}
     <div class="feat-card">
       <div class="feat-icon" style="background:var(--blue-dim);color:var(--blue);">&#8599;</div>
       <h3>Live stock data</h3>
-      <p>Fetches 6 months of OHLCV data for AAPL, GOOGL, MSFT and TSLA via yfinance API.</p>
+      <p>Fetches 6 months of OHLCV data for US Tech + Indian NSE caps via yfinance API.</p>
     </div>
     <div class="feat-card">
       <div class="feat-icon" style="background:var(--green-dim);color:var(--green);">&#9650;</div>
       <h3>Trend detection</h3>
       <p>MA7 vs MA30 crossover strategy automatically flags Bullish or Bearish signals per stock.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon" style="background:var(--purple-dim);color:var(--purple);">&#10034;</div>
+      <h3>RSI &amp; Forecasting</h3>
+      <p>Wilder's RSI via pure pandas + 7-day linear regression price projections.</p>
     </div>
     <div class="feat-card">
       <div class="feat-icon" style="background:var(--amber-dim);color:var(--amber);">&#9632;</div>
@@ -297,17 +304,12 @@ footer a:hover{color:var(--blue);}
     <div class="feat-card">
       <div class="feat-icon" style="background:var(--red-dim);color:var(--red);">&#10070;</div>
       <h3>SQL analytics</h3>
-      <p>Raw SQL queries for volatility ranking, monthly averages, and best yield city detection.</p>
+      <p>Raw SQL queries for volatility ranking and yields, automatically exported to CSV.</p>
     </div>
     <div class="feat-card">
       <div class="feat-icon" style="background:var(--blue-dim);color:var(--blue);">&#9641;</div>
       <h3>SQLite storage</h3>
       <p>Normalized schema with auto-incremented IDs, timestamps, and clean relational design.</p>
-    </div>
-    <div class="feat-card">
-      <div class="feat-icon" style="background:var(--green-dim);color:var(--green);">&#9670;</div>
-      <h3>Visualizations</h3>
-      <p>Interactive Chart.js dashboard with tabs, KPI cards, and live signal table.</p>
     </div>
   </div>
 </div>
@@ -316,7 +318,7 @@ footer a:hover{color:var(--blue);}
   <div class="section-eyebrow">How it works</div>
   <div class="section-title">Pipeline</div>
   <div class="pipeline">
-    <div class="pipe-step"><div class="num">1</div><h4>Collect</h4><p>yfinance + Rentcast APIs</p></div>
+    <div class="pipe-step"><div class="num">1</div><h4>Collect</h4><p>yfinance + APIs</p></div>
     <div class="pipe-arrow">&#8594;</div>
     <div class="pipe-step"><div class="num">2</div><h4>Store</h4><p>SQLite database</p></div>
     <div class="pipe-arrow">&#8594;</div>
@@ -328,10 +330,10 @@ footer a:hover{color:var(--blue);}
 
 <div class="preview-section fade-in">
   <div class="section-eyebrow">Preview</div>
-  <div class="section-title">AAPL 6-month trend</div>
+  <div class="section-title">AAPL 6-month trend + Forecast</div>
   <div class="preview-card">
     <div class="preview-header">
-      <h3>Apple Inc. — close price + moving averages</h3>
+      <h3>Apple Inc. — close price, moving averages &amp; 7d forecast</h3>
       <a href="dashboard.html">Full dashboard &#8599;</a>
     </div>
     <div class="chart-wrap"><canvas id="previewChart"></canvas></div>
@@ -345,18 +347,18 @@ footer a:hover{color:var(--blue);}
     <span class="tag">Python 3</span>
     <span class="tag">SQLite</span>
     <span class="tag">pandas</span>
+    <span class="tag">numpy</span>
     <span class="tag">yfinance</span>
-    <span class="tag">SQLAlchemy</span>
     <span class="tag">matplotlib</span>
+    <span class="tag">seaborn</span>
     <span class="tag">Chart.js</span>
-    <span class="tag">GitHub Pages</span>
   </div>
 </div>
 
 <div class="cta-section fade-in">
   <div class="cta-box">
     <h2>Explore the dashboard</h2>
-    <p>Interactive charts, live trend signals, and real estate comparisons — all in one place.</p>
+    <p>Interactive charts, live trend signals, 7d forecasts, and real estate comparisons.</p>
     <div class="cta-btns">
       <a href="dashboard.html" class="btn-hero-primary">Open Dashboard</a>
       <a href="https://github.com/vibhorhedau/market-trend-analyzer" target="_blank" class="btn-hero-outline">View Source</a>
@@ -376,8 +378,6 @@ footer a:hover{color:var(--blue);}
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script>
-function rollingMean(arr,w){return arr.map((_,i)=>{if(i<w-1)return null;const s=arr.slice(i-w+1,i+1);return Math.round(s.reduce((a,b)=>a+b,0)/w*100)/100;});}
-
 fetch('data.json').then(r=>r.json()).then(data=>{
   const s=data.stocks;
 
@@ -386,25 +386,40 @@ fetch('data.json').then(r=>r.json()).then(data=>{
   const items=Object.keys(s).map(sym=>{
     const p=s[sym].prices;const last=p[p.length-1];const prev=p[p.length-2];
     const chg=((last-prev)/prev*100).toFixed(2);
-    return `<div class="ticker-item"><span class="ticker-sym">${sym}</span><span class="ticker-price">$${last}</span><span class="ticker-chg ${chg>=0?'up':'dn'}">${chg>=0?'+':''}${chg}%</span><span class="ticker-sep">|</span></div>`;
+    const cur=sym.includes('.NS')?'₹':'$';
+    return `<div class="ticker-item"><span class="ticker-sym">${sym.replace('.NS','')}</span><span class="ticker-price">${cur}${last}</span><span class="ticker-chg ${chg>=0?'up':'dn'}">${chg>=0?'+':''}${chg}%</span><span class="ticker-sep">|</span></div>`;
   }).join('');
   tickerEl.innerHTML=items+items;
 
   // Preview chart
   const ap=s['AAPL'];
+  const d=new Date(ap.dates[ap.dates.length-1]);
+  const fDates=[];
+  for(let i=1;i<=7;i++){
+    d.setDate(d.getDate()+1);
+    if(d.getDay()===0||d.getDay()===6) d.setDate(d.getDate()+(d.getDay()===0?1:2));
+    fDates.push(d.toISOString().split('T')[0]);
+  }
+  const allDates=[...ap.dates, ...fDates];
+  
+  const fData=Array(ap.prices.length-1).fill(null);
+  fData.push(ap.prices[ap.prices.length-1]);
+  fData.push(...ap.forecast);
+
   new Chart(document.getElementById('previewChart'),{
     type:'line',
     data:{
-      labels:ap.dates,
+      labels:allDates,
       datasets:[
-        {label:'Close',data:ap.prices,borderColor:'#4a9eff',borderWidth:2,pointRadius:0,fill:false,tension:0.3},
-        {label:'MA7',data:rollingMean(ap.prices,7),borderColor:'#2dba8a',borderWidth:1.5,pointRadius:0,fill:false,tension:0.3,borderDash:[5,4]},
-        {label:'MA30',data:rollingMean(ap.prices,30),borderColor:'#f0a830',borderWidth:1.5,pointRadius:0,fill:false,tension:0.3,borderDash:[5,4]}
+        {label:'Close',data:[...ap.prices,...Array(7).fill(null)],borderColor:'#4a9eff',borderWidth:2,pointRadius:0,fill:false,tension:0.3},
+        {label:'MA7',data:[...ap.ma7,...Array(7).fill(null)],borderColor:'#2dba8a',borderWidth:1.5,pointRadius:0,fill:false,tension:0.3,borderDash:[5,4]},
+        {label:'MA30',data:[...ap.ma30,...Array(7).fill(null)],borderColor:'#f0a830',borderWidth:1.5,pointRadius:0,fill:false,tension:0.3,borderDash:[5,4]},
+        {label:'Forecast',data:fData,borderColor:'#f0a830',borderWidth:2,pointRadius:0,fill:true,backgroundColor:'rgba(240,168,48,0.15)',tension:0,borderDash:[4,4]}
       ]
     },
     options:{
       responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{labels:{color:'#5a6580',font:{size:12,family:'IBM Plex Mono'}}}},
+      plugins:{legend:{display:false}},
       scales:{
         x:{ticks:{color:'#3a4560',maxTicksLimit:8,font:{size:11}},grid:{color:'#1e2535'}},
         y:{ticks:{color:'#3a4560',font:{size:11}},grid:{color:'#1e2535'}}
