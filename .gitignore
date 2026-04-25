@@ -1,0 +1,31 @@
+# SQLite database (generated at runtime)
+data/market.db
+
+# Generated chart images
+data/*.png
+
+# Generated runtime CSVs (re-created on every run)
+data/summary_report.csv
+data/forecast.csv
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Virtual environments
+.env
+venv/
+.venv/
+env/
+
+# Build / packaging
+*.egg-info/
+dist/
+build/
+
+# OS artefacts
+.DS_Store
+Thumbs.db

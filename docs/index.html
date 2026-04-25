@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Market Trend Analyzer</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#080b10;
+  --surface:#0e1219;
+  --card:#121720;
+  --border:#1e2535;
+  --border2:#2a3348;
+  --text:#dde3f0;
+  --muted:#5a6580;
+  --hint:#3a4560;
+  --blue:#4a9eff;
+  --blue-dim:#1a3a6a;
+  --green:#2dba8a;
+  --green-dim:#0a2a1e;
+  --amber:#f0a830;
+  --amber-dim:#2a1e08;
+  --red:#e85555;
+  --red-dim:#2a0e0e;
+}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;line-height:1.6;overflow-x:hidden;}
+
+/* grid bg */
+body::before{
+  content:'';position:fixed;inset:0;z-index:0;
+  background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);
+  background-size:60px 60px;
+  opacity:0.25;pointer-events:none;
+}
+
+/* NAV */
+nav{
+  position:sticky;top:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 2.5rem;height:56px;
+  background:rgba(8,11,16,0.85);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+}
+.nav-logo{font-size:15px;font-weight:700;letter-spacing:-0.5px;display:flex;align-items:center;gap:8px;}
+.nav-logo .dot{width:8px;height:8px;border-radius:50%;background:var(--blue);display:inline-block;}
+.nav-links{display:flex;gap:0;}
+.nav-links a{
+  color:var(--muted);text-decoration:none;font-size:13px;font-weight:500;
+  padding:6px 16px;border-radius:6px;transition:all .15s;
+}
+.nav-links a:hover{color:var(--text);background:var(--surface);}
+.nav-links a.active{color:var(--blue);}
+.nav-cta{
+  background:var(--blue);color:#fff;text-decoration:none;
+  font-size:13px;font-weight:600;padding:7px 18px;
+  border-radius:7px;transition:opacity .15s;letter-spacing:0.2px;
+}
+.nav-cta:hover{opacity:0.85;}
+
+/* HERO */
+.hero{
+  position:relative;z-index:1;
+  max-width:860px;margin:0 auto;
+  padding:7rem 2rem 5rem;
+  text-align:center;
+}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--blue-dim);color:var(--blue);
+  font-size:12px;font-weight:600;letter-spacing:1px;
+  padding:5px 14px;border-radius:20px;
+  border:1px solid rgba(74,158,255,0.25);
+  margin-bottom:2rem;text-transform:uppercase;
+}
+.hero-badge .pulse{
+  width:7px;height:7px;border-radius:50%;background:var(--blue);
+  animation:pulse 2s ease infinite;
+}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.5;transform:scale(0.8);}}
+
+h1{
+  font-size:clamp(2.8rem,6vw,4.2rem);font-weight:800;
+  line-height:1.05;letter-spacing:-2px;margin-bottom:1.5rem;
+}
+h1 .line2{color:var(--blue);}
+
+.hero-sub{
+  font-size:16px;color:var(--muted);max-width:500px;
+  margin:0 auto 2.5rem;line-height:1.8;font-weight:400;
+}
+.hero-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+.btn-hero-primary{
+  background:var(--blue);color:#fff;text-decoration:none;
+  font-size:14px;font-weight:600;padding:12px 28px;
+  border-radius:8px;transition:all .15s;letter-spacing:0.2px;
+}
+.btn-hero-primary:hover{background:#3a8eef;transform:translateY(-1px);}
+.btn-hero-outline{
+  background:transparent;color:var(--text);text-decoration:none;
+  font-size:14px;font-weight:500;padding:11px 24px;
+  border-radius:8px;border:1px solid var(--border2);transition:all .15s;
+}
+.btn-hero-outline:hover{border-color:var(--blue);color:var(--blue);}
+
+/* TICKER */
+.ticker-wrap{
+  position:relative;z-index:1;
+  border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  background:var(--surface);padding:10px 0;overflow:hidden;
+}
+.ticker-inner{display:flex;gap:0;animation:ticker 30s linear infinite;width:max-content;}
+@keyframes ticker{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+.ticker-item{
+  display:flex;align-items:center;gap:10px;padding:0 2rem;
+  white-space:nowrap;font-size:13px;font-family:'IBM Plex Mono',monospace;
+}
+.ticker-sym{font-weight:500;color:var(--text);}
+.ticker-price{color:var(--muted);}
+.ticker-chg.up{color:var(--green);}
+.ticker-chg.dn{color:var(--red);}
+.ticker-sep{color:var(--hint);}
+
+/* STATS */
+.stats-section{
+  position:relative;z-index:1;
+  max-width:960px;margin:0 auto;padding:4rem 2rem;
+}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1px;border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+.stat-box{
+  background:var(--card);padding:1.5rem 1.75rem;
+  transition:background .15s;
+}
+.stat-box:hover{background:var(--surface);}
+.stat-num{font-size:2rem;font-weight:800;letter-spacing:-1px;margin-bottom:4px;}
+.stat-num.blue{color:var(--blue);}
+.stat-num.green{color:var(--green);}
+.stat-num.amber{color:var(--amber);}
+.stat-num.red{color:var(--red);}
+.stat-lbl{font-size:12px;color:var(--muted);font-weight:500;letter-spacing:0.3px;}
+
+/* FEATURES */
+.features-section{
+  position:relative;z-index:1;
+  max-width:960px;margin:0 auto;padding:2rem 2rem 4rem;
+}
+.section-eyebrow{font-size:11px;font-weight:700;letter-spacing:2px;color:var(--blue);text-transform:uppercase;margin-bottom:8px;}
+.section-title{font-size:1.75rem;font-weight:700;letter-spacing:-0.8px;margin-bottom:2.5rem;}
+
+.feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1px;border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+.feat-card{background:var(--card);padding:1.5rem;transition:background .15s;cursor:default;}
+.feat-card:hover{background:var(--surface);}
+.feat-icon{
+  width:38px;height:38px;border-radius:9px;margin-bottom:1rem;
+  display:flex;align-items:center;justify-content:center;
+  font-size:17px;
+}
+.feat-card h3{font-size:14px;font-weight:600;margin-bottom:6px;letter-spacing:-0.2px;}
+.feat-card p{font-size:13px;color:var(--muted);line-height:1.65;}
+
+/* PIPELINE */
+.pipeline-section{
+  position:relative;z-index:1;
+  max-width:960px;margin:0 auto;padding:2rem 2rem 4rem;
+}
+.pipeline{display:flex;align-items:center;gap:0;flex-wrap:wrap;}
+.pipe-step{
+  flex:1;min-width:120px;background:var(--card);
+  border:1px solid var(--border);border-radius:10px;
+  padding:1rem 1.25rem;text-align:center;
+}
+.pipe-step .num{
+  width:26px;height:26px;border-radius:50%;
+  background:var(--blue-dim);color:var(--blue);
+  font-size:12px;font-weight:700;display:flex;align-items:center;
+  justify-content:center;margin:0 auto 8px;
+}
+.pipe-step h4{font-size:13px;font-weight:600;margin-bottom:4px;}
+.pipe-step p{font-size:11px;color:var(--muted);}
+.pipe-arrow{color:var(--hint);font-size:18px;padding:0 8px;flex-shrink:0;}
+
+/* STACK */
+.stack-section{
+  position:relative;z-index:1;
+  max-width:960px;margin:0 auto;padding:2rem 2rem 4rem;
+}
+.tags{display:flex;flex-wrap:wrap;gap:8px;}
+.tag{
+  background:var(--card);border:1px solid var(--border);
+  color:var(--muted);font-size:12px;font-weight:500;
+  padding:6px 14px;border-radius:6px;
+  font-family:'IBM Plex Mono',monospace;
+  transition:all .15s;cursor:default;
+}
+.tag:hover{border-color:var(--blue);color:var(--blue);}
+
+/* CHART PREVIEW */
+.preview-section{
+  position:relative;z-index:1;
+  max-width:960px;margin:0 auto;padding:2rem 2rem 4rem;
+}
+.preview-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:16px;padding:1.5rem;
+}
+.preview-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;}
+.preview-header h3{font-size:14px;font-weight:600;}
+.preview-header a{font-size:12px;color:var(--blue);text-decoration:none;}
+.chart-wrap{position:relative;height:220px;}
+
+/* CTA */
+.cta-section{
+  position:relative;z-index:1;
+  max-width:960px;margin:0 auto;padding:2rem 2rem 6rem;text-align:center;
+}
+.cta-box{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:16px;padding:3rem 2rem;
+}
+.cta-box h2{font-size:1.6rem;font-weight:700;letter-spacing:-0.8px;margin-bottom:0.75rem;}
+.cta-box p{font-size:14px;color:var(--muted);margin-bottom:2rem;}
+.cta-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+
+/* FOOTER */
+footer{
+  position:relative;z-index:1;
+  border-top:1px solid var(--border);
+  padding:1.5rem 2.5rem;
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;
+  font-size:12px;color:var(--muted);
+}
+footer a{color:var(--muted);text-decoration:none;transition:color .15s;}
+footer a:hover{color:var(--blue);}
+
+/* FADE IN */
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .5s ease,transform .5s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo"><span class="dot"></span>market.analyzer</div>
+  <div class="nav-links">
+    <a href="index.html" class="active">Home</a>
+    <a href="dashboard.html">Dashboard</a>
+  </div>
+  <a href="https://github.com/vibhorhedau/market-trend-analyzer" target="_blank" class="nav-cta">GitHub</a>
+</nav>
+
+<div class="hero fade-in">
+  <div class="hero-badge"><span class="pulse"></span>Portfolio Project</div>
+  <h1>Stock &amp; Real Estate<br/><span class="line2">Trend Analyzer</span></h1>
+  <p class="hero-sub">An end-to-end data pipeline that collects, stores, and detects market trends using Python, SQL, and live financial APIs.</p>
+  <div class="hero-actions">
+    <a href="dashboard.html" class="btn-hero-primary">View Live Dashboard</a>
+    <a href="https://github.com/vibhorhedau/market-trend-analyzer" target="_blank" class="btn-hero-outline">View on GitHub</a>
+  </div>
+</div>
+
+<div class="ticker-wrap">
+  <div class="ticker-inner" id="ticker"></div>
+</div>
+
+<div class="stats-section fade-in">
+  <div class="stats-grid">
+    <div class="stat-box"><div class="stat-num blue">4</div><div class="stat-lbl">Stocks tracked</div></div>
+    <div class="stat-box"><div class="stat-num green">6mo</div><div class="stat-lbl">Historical data</div></div>
+    <div class="stat-box"><div class="stat-num amber">4</div><div class="stat-lbl">Cities analyzed</div></div>
+    <div class="stat-box"><div class="stat-num red">120+</div><div class="stat-lbl">Data points per stock</div></div>
+    <div class="stat-box"><div class="stat-num blue">5</div><div class="stat-lbl">SQL queries</div></div>
+  </div>
+</div>
+
+<div class="features-section fade-in">
+  <div class="section-eyebrow">What it does</div>
+  <div class="section-title">Features</div>
+  <div class="feat-grid">
+    <div class="feat-card">
+      <div class="feat-icon" style="background:var(--blue-dim);color:var(--blue);">&#8599;</div>
+      <h3>Live stock data</h3>
+      <p>Fetches 6 months of OHLCV data for AAPL, GOOGL, MSFT and TSLA via yfinance API.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon" style="background:var(--green-dim);color:var(--green);">&#9650;</div>
+      <h3>Trend detection</h3>
+      <p>MA7 vs MA30 crossover strategy automatically flags Bullish or Bearish signals per stock.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon" style="background:var(--amber-dim);color:var(--amber);">&#9632;</div>
+      <h3>Real estate analysis</h3>
+      <p>Rent yield, price-to-rent ratio, and market buy/rent signals for 4 Indian cities.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon" style="background:var(--red-dim);color:var(--red);">&#10070;</div>
+      <h3>SQL analytics</h3>
+      <p>Raw SQL queries for volatility ranking, monthly averages, and best yield city detection.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon" style="background:var(--blue-dim);color:var(--blue);">&#9641;</div>
+      <h3>SQLite storage</h3>
+      <p>Normalized schema with auto-incremented IDs, timestamps, and clean relational design.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon" style="background:var(--green-dim);color:var(--green);">&#9670;</div>
+      <h3>Visualizations</h3>
+      <p>Interactive Chart.js dashboard with tabs, KPI cards, and live signal table.</p>
+    </div>
+  </div>
+</div>
+
+<div class="pipeline-section fade-in">
+  <div class="section-eyebrow">How it works</div>
+  <div class="section-title">Pipeline</div>
+  <div class="pipeline">
+    <div class="pipe-step"><div class="num">1</div><h4>Collect</h4><p>yfinance + Rentcast APIs</p></div>
+    <div class="pipe-arrow">&#8594;</div>
+    <div class="pipe-step"><div class="num">2</div><h4>Store</h4><p>SQLite database</p></div>
+    <div class="pipe-arrow">&#8594;</div>
+    <div class="pipe-step"><div class="num">3</div><h4>Analyze</h4><p>pandas + SQL queries</p></div>
+    <div class="pipe-arrow">&#8594;</div>
+    <div class="pipe-step"><div class="num">4</div><h4>Visualize</h4><p>Charts + dashboard</p></div>
+  </div>
+</div>
+
+<div class="preview-section fade-in">
+  <div class="section-eyebrow">Preview</div>
+  <div class="section-title">AAPL 6-month trend</div>
+  <div class="preview-card">
+    <div class="preview-header">
+      <h3>Apple Inc. — close price + moving averages</h3>
+      <a href="dashboard.html">Full dashboard &#8599;</a>
+    </div>
+    <div class="chart-wrap"><canvas id="previewChart"></canvas></div>
+  </div>
+</div>
+
+<div class="stack-section fade-in">
+  <div class="section-eyebrow">Built with</div>
+  <div class="section-title">Tech stack</div>
+  <div class="tags">
+    <span class="tag">Python 3</span>
+    <span class="tag">SQLite</span>
+    <span class="tag">pandas</span>
+    <span class="tag">yfinance</span>
+    <span class="tag">SQLAlchemy</span>
+    <span class="tag">matplotlib</span>
+    <span class="tag">Chart.js</span>
+    <span class="tag">GitHub Pages</span>
+  </div>
+</div>
+
+<div class="cta-section fade-in">
+  <div class="cta-box">
+    <h2>Explore the dashboard</h2>
+    <p>Interactive charts, live trend signals, and real estate comparisons — all in one place.</p>
+    <div class="cta-btns">
+      <a href="dashboard.html" class="btn-hero-primary">Open Dashboard</a>
+      <a href="https://github.com/vibhorhedau/market-trend-analyzer" target="_blank" class="btn-hero-outline">View Source</a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <span>Built by <a href="https://github.com/vibhorhedau" target="_blank">Vibhor Hedau</a> &nbsp;&mdash;&nbsp; Market Trend Analyzer</span>
+  <div style="display:flex;gap:1.5rem;">
+    <a href="index.html">Home</a>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="https://github.com/vibhorhedau/market-trend-analyzer" target="_blank">GitHub</a>
+    <a href="https://linkedin.com/in/vibhorhedau" target="_blank">LinkedIn</a>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+function rollingMean(arr,w){return arr.map((_,i)=>{if(i<w-1)return null;const s=arr.slice(i-w+1,i+1);return Math.round(s.reduce((a,b)=>a+b,0)/w*100)/100;});}
+
+fetch('data.json').then(r=>r.json()).then(data=>{
+  const s=data.stocks;
+
+  // Ticker
+  const tickerEl=document.getElementById('ticker');
+  const items=Object.keys(s).map(sym=>{
+    const p=s[sym].prices;const last=p[p.length-1];const prev=p[p.length-2];
+    const chg=((last-prev)/prev*100).toFixed(2);
+    return `<div class="ticker-item"><span class="ticker-sym">${sym}</span><span class="ticker-price">$${last}</span><span class="ticker-chg ${chg>=0?'up':'dn'}">${chg>=0?'+':''}${chg}%</span><span class="ticker-sep">|</span></div>`;
+  }).join('');
+  tickerEl.innerHTML=items+items;
+
+  // Preview chart
+  const ap=s['AAPL'];
+  new Chart(document.getElementById('previewChart'),{
+    type:'line',
+    data:{
+      labels:ap.dates,
+      datasets:[
+        {label:'Close',data:ap.prices,borderColor:'#4a9eff',borderWidth:2,pointRadius:0,fill:false,tension:0.3},
+        {label:'MA7',data:rollingMean(ap.prices,7),borderColor:'#2dba8a',borderWidth:1.5,pointRadius:0,fill:false,tension:0.3,borderDash:[5,4]},
+        {label:'MA30',data:rollingMean(ap.prices,30),borderColor:'#f0a830',borderWidth:1.5,pointRadius:0,fill:false,tension:0.3,borderDash:[5,4]}
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{labels:{color:'#5a6580',font:{size:12,family:'IBM Plex Mono'}}}},
+      scales:{
+        x:{ticks:{color:'#3a4560',maxTicksLimit:8,font:{size:11}},grid:{color:'#1e2535'}},
+        y:{ticks:{color:'#3a4560',font:{size:11}},grid:{color:'#1e2535'}}
+      }
+    }
+  });
+});
+
+// Scroll fade-in
+const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');}});},{threshold:0.1});
+document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>
